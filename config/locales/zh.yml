@@ -21,6 +21,7 @@ zh:
       update:
         success: '更新成功'
     actions:
+      sync_resource: '同步'
       show_resource: '%{name}'
       edit_resource: 'Edit %{name}'
 

@@ -11,8 +11,22 @@ Rails.application.routes.draw do
     resources :tags
     resources :organizations
     resources :error_logs
-    resources :models, except: [:new, :create]
-    resources :datasets, except: [:new, :create]
+    resources :models, except: [:new, :create] do
+      collection do
+        get '/:model_id/sync', to: 'models#sync'
+      end
+    end
+    resources :datasets, except: [:new, :create] do
+      collection do
+        get '/:dataset_id/sync', to: 'datasets#sync'
+      end
+    end
+    resources :codes, except: [:new, :create] do
+      collection do
+        get '/:code_id/sync', to: 'codes#sync'
+      end
+    end
+    resources :mirrors
 
     root to: "users#index"
   end
