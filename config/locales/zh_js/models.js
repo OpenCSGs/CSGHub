@@ -17,6 +17,7 @@ export const models = {
     owner: "所有者",
     modelName: "模型名称",
     modelNickName: "模型别名",
+    license: "许可证",
     modelDesc: "模型简介",
     public: "公开",
     publicDesc:
@@ -26,7 +27,8 @@ export const models = {
     tips: "创建模型后，你可以使用网页或 Git 上传你的文件。",
     createModel: "创建模型",
     createSuccess: "模型创建成功",
-    tip: "应用于模型数据，创建后不可更改" 
+    tip: "应用于模型数据，创建后不可更改",
+    createFail: "模型创建失败",
   },
   edit: {
     tips: "将会显示在模型列表页面中，选填",
