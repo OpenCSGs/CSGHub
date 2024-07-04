@@ -6,6 +6,7 @@ class Code < ApplicationRecord
   belongs_to :owner, polymorphic: true
   belongs_to :creator, class_name: 'User', foreign_key: :creator_id
   has_many :discussions, as: :discussionable, dependent: :destroy
+  has_one :mirror, as: :mirrorable
 
   after_create :sync_created_code_to_starhub_server
   after_destroy :delete_code_from_starhub_server

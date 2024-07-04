@@ -46,6 +46,10 @@ en:
     updateFileSuccess: "File Updated"
     uploadFileSuccess: "File Uploaded"
 
+  administrate:
+    actions:
+      sync_resource: 'Sync'
+
   activerecord:
     errors:
       messages:
