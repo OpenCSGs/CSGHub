@@ -118,7 +118,7 @@
 
   const settingsVisibility = computed(() => {
     if (collectionData.value) {
-      return props.userName === collectionData.value.username
+      return  collectionData.value.can_manage
     } else {
       return false
     }

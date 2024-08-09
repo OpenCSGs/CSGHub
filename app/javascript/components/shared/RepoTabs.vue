@@ -1,5 +1,6 @@
 <template>
   <div class="relative">
+    <AddToCollections  :settingsVisibility="settingsVisibility" :repoId="repoDetail.repository_id" :userName="userName" />
     <RepoClone
       v-if="repoType !== 'endpoint'"
       :repoType="repoType"
@@ -261,6 +262,7 @@
   import EndpointPage from '../endpoints/EndpointPage.vue'
   import EndpointLogs from '../endpoints/EndpointLogs.vue'
   import BillingDetail from './BillingDetail.vue'
+  import AddToCollections from '../collections/AddToCollections.vue'
   import { computed, onMounted } from 'vue'
 
   const props = defineProps({

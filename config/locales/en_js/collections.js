@@ -21,6 +21,7 @@ export const collections = {
   },
   edit: {
     add: 'Add Project',
+    addCollection: 'Add to Collection',
     type: 'Project Type',
     name: 'Project Name',
     cnName: 'Collection Name in Chinese',

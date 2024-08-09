@@ -20,6 +20,7 @@ export const collections = {
   },
   edit: {
     add: '添加项目',
+    addCollection: '加入合集',
     type: '项目类型',
     name: '项目名称',
     cnName: '合集中文名称',
