@@ -276,6 +276,14 @@ module Starhub
       @client.post("/sync/client_setting", options)
     end
 
+    def get_error_events(username, options = {})
+      options[:ext] = {username: username, agent :{...}}
+      options[:id] = "web_server_err"
+      options[:m] = "error"
+      options[:v] = "error msg get from rails web server"
+      @client.post("/events", options)
+    end
+
     # TODO: add more starhub api
 
     private

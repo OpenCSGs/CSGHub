@@ -57,6 +57,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def get_error_events
+    Starhub.api.get_error_events(current_user.name)
+  end
+
   private
 
   def log_error message, backtrace
