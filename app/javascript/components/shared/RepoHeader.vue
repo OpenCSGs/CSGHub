@@ -107,7 +107,6 @@
       <div
         class="flex cursor-pointer gap-[4px] border border-[#DCDFE6] pl-3 pr-1 py-[2px] text-center text-xs text-[#606266] font-medium rounded hover:bg-gray-50 active:ring-4 active:ring-gray-400 active:ring-opacity-25 active:bg-white"
         :class="userLiked === true ? 'text-gray-400 border-gray-200' : ''"
-        v-show="repoType !== 'collections'"
         @click="clickLike"
       >
         {{ userLiked === false ? $t('shared.likes') : $t('shared.hasLikes') }}
@@ -274,6 +273,14 @@
     }
   })
 
+  const likeUrl = computed(() => {
+    if(props.repoType === 'collections'){
+      return `${csghubServer}/api/v1/user/${props.name}/likes/collections/${props.repoId}`
+    }else{
+      return `${csghubServer}/api/v1/user/${props.name}/likes/${props.repoId}`
+    }
+  })
+
   const redirectBaseModel = () => {
     window.location.href = `/models/${props.baseModel}`
   }
@@ -285,7 +292,7 @@
   const addLike = async () => {
     const options = { method: 'PUT' }
     const response = await jwtFetch(
-      `${csghubServer}/api/v1/user/${props.name}/likes/${props.repoId}`,
+      likeUrl.value,
       options,
       true
     )
@@ -305,7 +312,7 @@
   const removeLike = async () => {
     const options = { method: 'DELETE' }
     const response = await jwtFetch(
-      `${csghubServer}/api/v1/user/${props.name}/likes/${props.repoId}`,
+      likeUrl.value,
       options
     )
     if (!response.ok) {

@@ -29,10 +29,10 @@
                 style="width: 312px"
               >
                 <el-option
-                  v-for="item in namespaces"
-                  :key="item[0]"
-                  :label="item[1]"
-                  :value="item[0]"
+                  v-for="item in namespaces()"
+                  :key="item"
+                  :label="item"
+                  :value="item"
                 />
               </el-select>
             </el-form-item>
@@ -147,19 +147,15 @@
   import jwtFetch from '../../packs/jwtFetch'
   import { ElMessage } from 'element-plus'
   import PublicAndPrivateRadioGroup from '../shared/form/PublicAndPrivateRadioGroup.vue'
+  import useUserStore from '../../stores/UserStore.js'
 
+  const userStore = useUserStore()
   const csghubServer = inject('csghubServer')
-
-  const props = defineProps({
-    namespaces: Array
-  })
 
   const { t } = useI18n()
   const dataFormRef = ref()
   const nameRule = inject('nameRule')
 
-  const owner = ref(props.namespaces[0][0])
-  const visibility = ref('private')
   const hasCreateCollection = ref(false)
   const colorNameList = ref([
     ['#F5F3FF', t('collections.color.lPurple')],
@@ -167,11 +163,18 @@
     ['#FFF4ED', t('collections.color.lOrange')]
   ])
   const dataForm = ref({
-    owner: owner.value,
+    owner: '',
     visibility: 'private',
     colorName: colorNameList.value[0][0]
   })
   const rules = ref({
+    owner: [
+      {
+        required: true,
+        message: t('all.pleaseSelect', { value: t('collections.newCollection.owner') }),
+        trigger: 'change'
+      }
+    ],
     title: [
       { required: true, message: t('collections.newCollection.validation1'), trigger: 'blur' },
       { min: 2, max: 70, message: t('collections.newCollection.validation2'), trigger: 'blur' },
@@ -201,8 +204,19 @@
     })
   }
 
+  // Methods
+  const namespaces = () => {
+    let namespaces = userStore.orgs.map((org) => org.path)
+    namespaces.unshift(userStore.username)
+    const params = new URLSearchParams(window.location.search)
+    const orgName = params.get('orgName')
+    dataForm.value.owner = orgName || namespaces[0]
+    return namespaces
+  }
+
   async function submitCollectionForm() {
     const transformedData = {
+      namespace:'',
       description: '',
       name: '',
       nickname: '',
@@ -210,6 +224,7 @@
       theme: '#000000'
     }
     // 将 dataFormValue 的值直接复制到 transformedData
+    transformedData.namespace = dataForm.value.owner
     transformedData.description = dataForm.value.collectionDesc
     transformedData.name = dataForm.value.title
     transformedData.nickname = dataForm.value.collectionNickName

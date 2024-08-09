@@ -5,7 +5,6 @@ class CollectionsController < ApplicationController
   end
 
   def new
-    @available_namespaces = current_user.available_namespaces
   end
 
   def show

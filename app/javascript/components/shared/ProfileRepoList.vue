@@ -1,5 +1,24 @@
 <template>
   <div class="sm:w-[100%] sm:mt-[36px]">
+    <!-- collections -->
+    <div>
+      <h3 class="text-[20px] text-[#303133] flex items-center gap-[8px]">
+        <SvgIcon name="collections" width="18" height="18" />
+        <span>{{ $t("collections.collection") }}</span>
+      </h3>
+      <div v-if="hasCollections" class="mb-4 mt-[16px]">
+        <CollectionCards 
+          v-if="collections.data.length > 0" 
+          :collections="collections.data"
+        />
+      </div>
+      <div v-else class="flex flex-wrap gap-4 mb-4 mt-[16px]">
+        {{ $t("all.noData") }}
+      </div>
+      <view-more v-if="collections.more" target="collections" @view-more-targets="viewMoreTargets"></view-more>
+      <el-skeleton class="pr-6" v-if="collectionsLoading" :rows="2" animated />
+    </div>
+
     <!-- models -->
     <div>
       <h3 class="text-[20px] text-[#344054] flex items-center gap-[8px]">
@@ -109,6 +128,7 @@
 <script setup>
   import { computed, ref, onMounted, inject } from "vue"
   import RepoItem from "./RepoItem.vue"
+  import CollectionCards from "../collections/CollectionCards.vue"
   import FinetuneItem from "./FinetuneItem.vue"
   import ApplicationSpaceItem from "../application_spaces/ApplicationSpaceItem.vue"
   import EndpointItem from "../endpoints/EndpointItem.vue"
@@ -129,12 +149,14 @@
     return props.name === current_user
   })
 
+  const collections = ref([])
   const models = ref([])
   const datasets = ref([])
   const codes = ref([])
   const spaces = ref([])
   const endpoints = ref([])
   const finetunes = ref([])
+  const collectionsLoading = ref(false)
   const modelsLoading = ref(false)
   const datasetsLoading = ref(false)
   const codeLoading = ref(false)
@@ -142,6 +164,7 @@
   const endpointsLoading = ref(false)
   const finetunesLoading = ref(false)
 
+  const hasCollections = computed(() => collections.value?.total > 0)
   const hasModels = computed(() => models.value?.total > 0)
   const hasDatasets = computed(() => datasets.value?.total > 0)
   const hasCodes = computed(() => codes.value?.total > 0)
@@ -155,11 +178,13 @@
 
   const getProfileRepoData = async () =>{
     const defaultTotal = 6
+    const collectionsUrl = reposUrl("collections")
     const modelsUrl = reposUrl("models")
     const datasetsUrl = reposUrl("datasets")
     const spacesUrl = reposUrl("spaces")
     const codesUrl = reposUrl("codes")
     const promises = [
+        fetchData(collectionsUrl, collections, defaultTotal),
         fetchData(modelsUrl, models, defaultTotal),
         fetchData(datasetsUrl, datasets, defaultTotal),
         fetchData(spacesUrl, spaces, defaultTotal),
@@ -192,6 +217,9 @@
     } else if (target === "endpoints") {
       endpointsLoading.value = true
       fetchMoreEndpoints()
+    } else if (target === "collections") {
+      collectionsLoading.value = true
+      fetchMoreCollections()
     }
   }
 
@@ -211,6 +239,10 @@
     }
   }
 
+  const fetchMoreCollections = async () => {
+    const url = reposUrl("collections")
+    await fetchData(url, collections, collections.value.total)
+  }
   const fetchMoreModels = async () => {
     const url = reposUrl("models")
     await fetchData(url, models, models.value.total)
