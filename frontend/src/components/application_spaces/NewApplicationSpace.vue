@@ -256,7 +256,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item
-          :label="t('endpoints.new.cluster')"
+          :label="t('application_spaces.new.cluster')"
           class="w-full"
           prop="space_cluster">
           <el-select
@@ -288,18 +288,24 @@
             size="large"
             style="width: 100%"
           >
-            <el-option
-              v-for="item in spaceResources"
-              :key="item.name"
-              :label="item.name"
-              :value="item.id"
-              :disabled="!item.is_available"
-            />
+            <el-option-group
+              v-for="group in spaceResources"
+              :key="group.label"
+              :label="group.label"
+            >
+              <el-option
+                v-for="item in group.options"
+                :key="item.name"
+                :label="item.label"
+                :value="item.id"
+                :disabled="!item.is_available"
+              />
+            </el-option-group>
           </el-select>
-          <p class="text-gray-600 mt-[8px] font-light">
+          <p class="text-[#475467] mt-[8px] font-light">
             {{ $t('application_spaces.new.cloudResourceDesc1') }}
           </p>
-          <p class="text-gray-600 font-light">
+          <p class="text-[#475467] font-light">
             {{ $t('application_spaces.new.cloudResourceDesc2') }}
           </p>
         </el-form-item>
@@ -451,7 +457,7 @@
   }
 
   const fetchSpaceResources = async () => {
-    const { data, error } = await useFetchApi('/space_resources').json()
+    const { data, error } = await useFetchApi(`/space_resources?cluster_id=${dataForm.value.space_cluster}`).json()
 
     if (error.value) {
       ElMessage({
