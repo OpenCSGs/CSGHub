@@ -62,12 +62,15 @@
 </template>
 
 <script setup>
+  import { watch, ref } from 'vue'
+  import useFetchApi from '../../packs/useFetchApi'
   import EndpointPlayground from './EndpointPlayground.vue'
 
   const props = defineProps({
     appEndpoint: String,
     appStatus: String,
-    hardware: String,
+    clusterId: String,
+    sku: String,
     modelId: String,
     private: String,
     replicaList: Array,
@@ -75,5 +78,27 @@
       type: Number,
       default: 0
     }
+  })
+
+  const resource = ref({})
+
+  const fetchResources = async () => {
+    const { data, error } = await useFetchApi(`/space_resources?cluster_id=${props.clusterId}`).json()
+
+    if (error.value) {
+      ElMessage({
+        message: error.value.msg,
+        type: 'warning'
+      })
+    } else {
+      const body = data.value
+      resource.value = body.data.find((cloudResource) => {
+        return String(cloudResource.id) === props.sku
+      }) || {}
+    }
+  }
+
+  watch(() => props.clusterId, () => {
+    fetchResources()
   })
 </script>

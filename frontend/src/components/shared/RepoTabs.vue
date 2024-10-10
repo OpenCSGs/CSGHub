@@ -56,7 +56,8 @@
           :modelId="modelId"
           :private="private"
           :endpointReplica="endpointReplica"
-          :hardware="hardware"
+          :clusterId="clusterId"
+          :sku="sku"
           :replicaList="replicaList"
         />
         <repo-summary
@@ -280,7 +281,8 @@
     sdk: String,
     userName: String,
     commitId: String,
-    hardware: String,
+    clusterId: String,
+    sku: String,
     modelId: String,
     private: Boolean,
     endpointReplica: Number,

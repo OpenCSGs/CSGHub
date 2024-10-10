@@ -359,8 +359,10 @@
         return !!framework.frame_npu_image
       } else if (currentResource.value.type === 'gpu') {
         return !!framework.frame_image
-      } else {
+      } else if (currentResource.value.type === 'cpu') {
         return !!framework.frame_cpu_image
+      } else {
+        return true
       }
     })
   })

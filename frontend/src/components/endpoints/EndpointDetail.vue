@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full bg-gray-25 pt-9 pb-[60px] xl:px-10 md:px-0 md:pb-6 md:h-auto">
+  <div class="w-full bg-[#FCFCFD] pt-9 pb-[60px] xl:px-10 md:px-0 md:pb-6 md:h-auto">
     <div class="mx-auto max-w-[1280px]">
       <repo-header
         :private="endpoint.private"
@@ -25,7 +25,8 @@
       :settingsVisibility="canManage"
       :can-write="canWrite"
       repo-type="endpoint"
-      :hardware="endpoint.hardware"
+      :clusterId="endpoint.cluster_id"
+      :sku="endpoint.sku"
       :modelId="endpoint.model_id"
       :private="endpoint.private"
       :endpointReplica="endpoint.actual_replica"
@@ -96,7 +97,6 @@
   const ownerUrl = computed(() => {
     const { namespace } = modelInfo.value
     if (!namespace) return ''
-    
     const baseUrl = namespace.Type === 'user' ? '/profile/' : '/organizations/'
     return baseUrl + namespace.Path
   })
