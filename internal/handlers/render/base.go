@@ -43,6 +43,7 @@ func createTemplateData(ctx *gin.Context, extraData map[string]interface{}) gin.
 		"csghubServer":    config.ServerBaseUrl,
 		"onPremise":       config.OnPremise,
 		"enableHttps":     config.EnableHttps,
+		"enabledMenus":    config.EnabledMenus,
 		"currentUser":     currentUser,
 		"isLoggedIn":      isLoggedIn,
 		"metaTitle":       DEFAULT_META_TITLE,

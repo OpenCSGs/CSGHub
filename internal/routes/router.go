@@ -244,6 +244,7 @@ func setupViewsRouter(engine *gin.Engine, handlersRegistry *HandlersRegistry) {
 		ServerBaseUrl: handlersRegistry.Config.StarhubServer.BaseURL,
 		OnPremise:     handlersRegistry.Config.OnPremise,
 		EnableHttps:   handlersRegistry.Config.EnableHttps,
+		EnabledMenus:  handlersRegistry.Config.EnabledMenus,
 	}
 	engine.Use(injectConfig(globalConfig))
 

@@ -132,20 +132,27 @@
     hasEmail: Boolean
   })
 
-  const rawNavItems = [
+  // Get enabled menus from global config
+  const enabledMenusStr = typeof ENABLED_MENUS !== 'undefined' ? ENABLED_MENUS : 'models,datasets,mcp,skills,spaces,codes,collections,prompts'
+  const enabledMenusSet = new Set(enabledMenusStr.split(',').map(item => item.trim()).filter(Boolean))
+
+  const allRawNavItems = [
     {
+      id: 'models',
       title: t('navbar.models'),
       index: '/models',
       class: menuItemClass,
       style: 'border:none; height: 46px; border-radius: 4px; padding: 12px 16px;',
     },
     {
+      id: 'datasets',
       title: t('navbar.datasets'),
       index: '/datasets',
       class: menuItemClass,
       style: 'border:none; height: 46px; border-radius: 4px; padding: 12px 16px;',
     },
     {
+      id: 'mcp',
       title: t('navbar.mcp'),
       index: '/mcp/servers',
       class: menuItemClass,
@@ -173,36 +180,44 @@
       ]
     },
     {
+      id: 'skills',
       title: t('navbar.skills'),
       index: '/skills',
       class: menuItemClass,
       style: 'border:none; height: 46px; border-radius: 4px; padding: 12px 16px;',
     },
     {
+      id: 'spaces',
       title: t('navbar.spaces'),
       index: '/spaces',
       class: menuItemClass,
       style: 'border:none; height: 46px; border-radius: 4px; padding: 12px 16px;',
     },
     {
+      id: 'codes',
       title: t('navbar.codes'),
       index: '/codes',
       class: menuItemClass,
       style: 'border:none; height: 46px; border-radius: 4px; padding: 12px 16px;',
     },
     {
+      id: 'collections',
       title: t('collections.collection'),
       index: '/collections',
       class: menuItemClass,
       style: 'border:none; height: 46px; border-radius: 4px; padding: 12px 16px;',
     },
     {
+      id: 'prompts',
       title: t('prompts.promptLibrary'),
       index: '/prompts/library',
       class: menuItemClass,
       style: 'border:none; height: 46px; border-radius: 4px; padding: 12px 16px;',
     }
   ]
+
+  // Filter menu items based on enabled configuration
+  const rawNavItems = allRawNavItems.filter(item => enabledMenusSet.has(item.id))
 
   const allNavItems = ref(rawNavItems)
 
