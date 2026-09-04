@@ -39,7 +39,11 @@ jobs:
     - name: Install dependencies
       run: |
         echo "Installing dependencies ..."
-        go mod tidy
+        for i in 1 2 3; do
+          go mod tidy && break
+          echo "go mod tidy failed (attempt $i), retrying in 10s..."
+          sleep 10
+        done
 
     - name: Run Go unit tests
       run: |
