@@ -98,11 +98,22 @@
                 class="w-full rounded-md mb-4"
                 row-class-name="row-item-clamp cursor-pointer"
                 cell-class-name="!align-top">
-        <el-table-column v-for="column in previewData.columns"
+        <el-table-column v-for="(column, idx) in previewData.columns"
                         :key="column"
                         :prop="column"
-                        :label="column"
-                        min-width="180" />
+                        sortable
+                        :sort-method="getSortMethod(column, idx)"
+                        min-width="180">
+          <template #header>
+            <div class="flex items-center gap-1.5 overflow-hidden">
+              <span class="truncate font-medium text-gray-700" :title="column">{{ column }}</span>
+              <span v-if="getColumnType(idx)"
+                    class="text-[11px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-600 font-mono font-normal flex-shrink-0 border border-gray-200">
+                {{ formatColumnType(getColumnType(idx)) }}
+              </span>
+            </div>
+          </template>
+        </el-table-column>
       </el-table>
       <CsgPagination
         :perPage="perPage"
@@ -174,6 +185,45 @@
       }, {})
     )
   })
+
+  const getColumnType = (index) => {
+    return previewData.value?.columns_type?.[index] || ''
+  }
+
+  const formatColumnType = (type) => {
+    if (!type) return ''
+    const lower = type.toLowerCase()
+    if (lower === 'string') return 'str'
+    if (lower.includes('int')) return lower
+    if (lower.includes('float')) return 'float'
+    if (lower.includes('bool')) return 'bool'
+    if (lower.includes('list') || lower.includes('array')) return 'list'
+    if (lower.includes('dict') || lower.includes('struct')) return 'dict'
+    return type
+  }
+
+  const getSortMethod = (column, index) => {
+    const colType = getColumnType(index)
+    const lower = (colType || '').toLowerCase()
+    const isNumeric = lower.includes('int') || lower.includes('float') || lower.includes('number')
+
+    return (a, b) => {
+      const valA = a[column]
+      const valB = b[column]
+      if (valA === valB) return 0
+      if (valA === undefined || valA === null) return -1
+      if (valB === undefined || valB === null) return 1
+
+      if (isNumeric) {
+        const numA = Number(valA)
+        const numB = Number(valB)
+        if (!isNaN(numA) && !isNaN(numB)) {
+          return numA - numB
+        }
+      }
+      return String(valA).localeCompare(String(valB))
+    }
+  }
 
   const showRows = computed(() => {
     let result = ''

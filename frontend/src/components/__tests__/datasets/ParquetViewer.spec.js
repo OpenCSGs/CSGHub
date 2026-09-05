@@ -96,4 +96,21 @@ describe("ParquetViewer", () => {
     await flushPromises();
     expect(wrapper.vm.split).toBe("train");
   });
+
+  it("renders column headers with formatted column type badges", async () => {
+    await flushPromises();
+    const headerText = wrapper.find('.el-table__header-wrapper').text();
+    expect(headerText).toContain("id");
+    expect(headerText).toContain("int");
+    expect(headerText).toContain("text");
+    expect(headerText).toContain("str");
+    expect(headerText).toContain("label");
+  });
+
+  it("sorts numeric columns numerically instead of lexicographically", () => {
+    const sortFn = wrapper.vm.getSortMethod("id", 0);
+    expect(sortFn({ id: "2" }, { id: "10" })).toBeLessThan(0);
+    expect(sortFn({ id: "10" }, { id: "2" })).toBeGreaterThan(0);
+    expect(sortFn({ id: "2" }, { id: "2" })).toBe(0);
+  });
 });
